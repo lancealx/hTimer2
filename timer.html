@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Halo Timer</title>
+<link rel="stylesheet" type="text/css" href="css/jquery.countdown.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.3.css">
+
+
+<script src="scripts/jquery-1.11.1.js"></script>
+<script src="scripts/jquery.plugin.js"></script>
+<script src="scripts/jquery.countdown.js"></script>
+<script src="scripts/jquery.mobile-1.4.3.js"></script>
+
+<script>
+
+$(document).ready(function() {
+    $.ajax({
+        url: 'media/halo_timer.mp3',
+      
+    });
+});
+
+$(function() {	
+
+// load main timer paused
+$('#mainTimer').countdown({until: '+30m +1s',
+			compact: true, 
+    		format: 'MS',
+			description:''
+			}); 
+$('#mainTimer').countdown('pause');
+
+
+//load camo timer
+$('#camoTimer').countdown({until: '+1m +0s',
+			onExpiry: camoUp,
+			compact: true, 
+    		format: 'MS',
+			description:''
+			}); 
+$('#camoTimer').countdown('pause');
+});
+
+// fill camo bar 
+/*
+function camoFill(periods){
+	$('#camoTimer').animate({width: '100%'}, 60000);
+	};
+*/
+
+//restart camo timer
+function camoUp(){
+	$('#camoTimer').countdown('destroy'); 
+	$('#camoTimer').countdown({until: '+1m +0s',
+			onExpiry: camoUp,
+			compact: true, 
+    		format: 'MS',
+			description:''
+			})
+	$('#camoFill').width('0%');
+	$('#camoFill').animate({width: '100%'}, 60000,"linear"); 
+};
+
+// On Start button click...
+$(function() {		
+	$("#startButton").click( function()
+			{ 
+			//Start Timer
+			$('#mainTimer').countdown('toggle');
+			
+			//Start Camo Timer with 1 sec delay
+			setTimeout(function(){
+        	$('#camoTimer').countdown('toggle');
+    		}, 1000);
+			
+			//Hide Start Button
+			$("#startButton").hide();
+			
+			  
+});				
+
+//Load/play halo_timer.mp3
+$(function() {	
+var audioElement = document.createElement('audio');
+        		audioElement.setAttribute('src', 'media/halo_timer.mp3');
+        		//audioElement.setAttribute('autoplay', 'autoplay');
+        		audioElement.load();
+				//audioElement.addEventListener("load", function() {
+            	//audioElement.play()
+        		//}, true);
+
+				
+        $('#startButton').click(function() {
+			//Start camo fill bar
+			$('#camoFill').animate({width: '100%'}, 60000, "linear");
+            if (audioElement.paused == false) {
+      audioElement.pause();
+      
+  } else {
+      audioElement.play();
+      ;
+  }
+});
+		$('#resetButton').click(function() {
+			location.reload();
+			});
+		
+       
+			
+	});
+})
+
+
+</script>
+
+
+</head>
+<body data-role="page" data-theme="b">
+	<div data-role="header" data-theme="b">
+    <h1>Basic Timer</h1>
+  	</div>
+    
+
+<div data-role="content" class="ui-body-b" id="container">
+	<div id="timerContainer">
+	<div id="mainTimer"></div>
+    </div>
+
+	    <button data-theme="a" data-role="button" id="startButton">START</button>
+        
+   <!--     <div id="startButton">START</div>
+		</div>
+    -->    
+        
+            <button data-theme="a" data-role="button" id="resetButton">RESET</button>
+
+<div id="camoContainer">
+	<div id="camoFill">
+		<div id="camoTimer">
+        </div>
+	</div>
+</div>
+<div id="camoimg"></div>
+
+     <!--       <div id="resetButton">RESET
+            </div>
+      -->
+            
+           
+<!--            <div id="stopButton">stop</div> --></div>
+</body>
+</html>
